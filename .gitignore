@@ -1,0 +1,8 @@
+# Experiment output: pcaps, datasets, numbers, plots. Rerun it, don't commit it.
+out/
+
+# My own notes: project brief, tool howtos, the starter pack. Not the dissertation.
+notes/
+
+.venv/
+__pycache__/
