@@ -17,6 +17,21 @@ Stop writing when the four fields are full. This is not an essay.
 
 ---
 
+## 0. `pulls2024daitaeval` — Evaluating using the first eight DAITA servers
+
+**Read this one first, and it is ten minutes.** Grey literature, not a paper: a June 2024 blog post
+by Tobias Pulls. It is the *only* existing measurement of DAITA, which makes it the thing the March
+experiment has to improve on — and it tells you exactly how, because it is explicit about what it
+did not cover. Its method is also the template for February: 20 VMs, Selenium, tshark, 80,000
+traces.
+
+The four fields still apply, and field 3 is the one to copy out carefully.
+
+**Claims**
+**Measured on**
+**Cost reported**
+**To reproduce**
+
 ## 1. `siby2023quic` — Evaluating practical QUIC WF defenses for the masses — **read 2026-11-23**
 
 Closest published work to this dissertation. Ships no code and no data, so it is the paper to
@@ -60,7 +75,7 @@ whose implementation is literally called Adaptive-Tamaraw.
 
 ## 5. `smith2021quicage` — Website Fingerprinting in the Age of QUIC
 
-**The November gate candidate.** ~117,000 QUIC and TCP traces, publicly released with code. The
+**This is the November gate baseline — the one you actually reproduce.** ~117,000 QUIC and TCP traces, publicly released with code. The
 only large public dataset that is actually QUIC rather than Tor.
 
 **Claims**

@@ -6,3 +6,7 @@ notes/
 
 .venv/
 __pycache__/
+
+# Local-only assistant files. CLAUDE.md itself IS tracked, so a fresh clone gets the rules.
+CLAUDE.local.md
+.claude/

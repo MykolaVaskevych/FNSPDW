@@ -60,6 +60,9 @@ The question is "does padding actually help, and at what cost". Five papers answ
 - **`wang2026cease`** — NDSS 2026. Efficient defense by iteratively minimising mutual information.
 - **`hasselquist2024raising`** — what honest overhead looks like when published: constant-rate
   defense at 462 % receive bandwidth. Useful for knowing when a cost is absurd.
+- **`pulls2024daitaeval`** — grey literature, and required reading. The only existing DAITA
+  measurement: 2–4 MiB and 1–3 s per visit, one website, Windows, v1, no accuracy figures. Its
+  method (20 VMs, Selenium, tshark, 80,000 traces) is also the template for February.
 
 And four on why published accuracy does not survive contact with reality — the methods spine:
 
@@ -99,11 +102,13 @@ Two kinds of archive are there, and the choice matters:
 
 ## Still open
 
-**Nobody has independently evaluated DAITA, and Mullvad's own audit skipped it.** The GotaTun
-audit by Assured Security Consultants explicitly excluded the DAITA code. `pulls2026ephemeral` is
-the nearest academic work and is not independent — Pulls wrote Maybenot. Consumer reviews quote
-overhead figures with no source. So there are no trustworthy numbers for a deployed defense, which
-is the gap, and it is worth saying to Farrell plainly.
+**DAITA has been measured exactly once, by someone who is not independent of it.** That is the
+gap, and the full statement of it lives in `../PLAN.md` under *The gap this fills* — one canonical
+wording, so it cannot drift from being restated. In short: `pulls2024daitaeval` is a blog post by
+the author of Maybenot, who says on that page that he works with Mullvad on DAITA; it covers one
+website from Windows clients against DAITA v1 and publishes cost but no accuracy; Mullvad's own
+GotaTun audit excluded the DAITA code. Read that post early — it is the thing your March
+measurement has to improve on, and it tells you how.
 
 Other gaps:
 

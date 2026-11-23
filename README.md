@@ -7,8 +7,11 @@ MSc Future Networked Systems, Trinity College Dublin. Supervisor: Stephen Farrel
 
 ## Read
 
-- **[Plan](PLAN.md)** — month by month to submission in August 2027, with the gates and their
-  failure thresholds
+- **[Plan](PLAN.md)** — the topic, the scope, the gap this fills, and month by month to
+  submission in August 2027. **The source of truth for topic and scope**
+- **[Decisions](DECISIONS.md)** — every time the scope changed, when, why, and what it superseded
+- **[Context](CONTEXT.md)** — the whole project in one self-contained page, for briefing an
+  assistant that cannot read this repo
 - **[Literature](literature/README.md)** — the library, and why each paper is in it
   · **[reading order](literature/summaries.md)** · **[code and data](literature/artifacts.md)**
 - **Paper** — [PDF](https://github.com/MykolaVaskevych/Paper/blob/main/build/default/default.pdf)
@@ -26,9 +29,10 @@ Better BibTeX auto-exports it to **`paper/src/bibs/ref.bib`**, which is the file
 through `\bibliography{bibs/ref}`. Add a paper in Zotero and the export follows within seconds.
 
 `ref.bib` is therefore machine-written and must never be hand-edited — anything typed into it is
-lost on the next export. There are currently 33 entries, matching the 33 papers in the collection
-exactly, sorted into four subcollections by what they are for: foundations, read-and-reproduce,
-needed for the experiments, and current work to argue with.
+lost on the next export. The collection is sorted into four subcollections by what each paper is
+for: foundations, read-and-reproduce, needed for the experiments, and current work to argue with.
+To check the export is in step, compare `grep -c '^@' paper/src/bibs/ref.bib` against the item
+count Zotero shows for the collection.
 
 Every entry was verified against OpenAlex, the arXiv API, or the publisher's own proceedings
 listing before it went in. [literature/artifacts.md](literature/artifacts.md) records which of
