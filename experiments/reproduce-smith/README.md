@@ -70,7 +70,51 @@ what `workflows/generalisability-analysis` actually reads before comparing numbe
 
 If they differ, say so in the result rather than quietly comparing across preprocessing.
 
+## What it actually costs — checked 2026-11-24, before collecting anything
+
+The gate as originally written, "their code, their data, their number", is **not a one-evening
+job**, and that is worth knowing before starting rather than after.
+
+From the workflow's own README: *"Each of the 330 train-test splits takes around 30-60 minutes for
+a sequential runtime of around 165-330 hours."* That is one to two weeks of compute for the full
+sweep — four classifiers, ten repetitions, nine QUIC deployment levels.
+
+What the 871 MB archive actually ships, verified by listing it: eleven files, of which the only one
+that matters here is `generalisability-analysis/results/open-world-dataset.hdf`, **3.0 GB
+uncompressed**. Domain lists and a feature-rank CSV make up the rest. **No splits and no
+predictions.** So the number has to be computed; the notebook cannot simply re-plot it.
+
+And `confusion-matrix.ipynb` — the notebook that makes Table 2, the source of the 4,801 of 5,000
+figure — reads `predictions-varcnn-quic-all.csv`. That is **Var-CNN**, a deep-learning model, over
+ten repetitions. Not one of the cheap classifiers. The config lists `dfnet, varcnn, p1fp, kfp` with
+`n_repetitions: 10`, and per-job times of roughly 70 for dfnet and 10 for kfp.
+
+The 4090 has 24 GB, so Var-CNN on GPU is viable. It is a question of hours, not minutes.
+
+### So the gate narrows, and the threshold narrows with it
+
+Pick one of these and write the choice down before running:
+
+1. **Var-CNN, fewer repetitions.** Run the Table 2 experiment with 1-2 repetitions instead of 10.
+   Compares directly against 96 % but with wider variance than the paper's, so the +/- 3 pp band
+   above may be too tight for a single repetition. This is the honest reproduction.
+2. **k-FP instead.** Roughly 10 per job, so quick, but **Table 2 is not k-FP** — comparing a k-FP
+   result against the Var-CNN figure would be measuring the wrong thing. Only valid if reported
+   explicitly as the same experiment with a cheaper classifier.
+
+Either way the threshold has to name the classifier and the number of repetitions. The version
+above does not, which is a defect in the pre-registration found before any data was collected —
+which is the point of writing it first.
+
+### Already done, so the run can start cold
+
+- Dataset downloaded and extracted to `out/repo/workflows/generalisability-analysis/results/`
+- `github.com/jpcsmith/wf-in-the-age-of-quic` cloned to `out/repo` (shallow)
+- `git-lfs` is **not** installed and is **not needed** for this workflow — LFS there covers
+  chromedriver binaries and data files, not the Snakefile, rules, scripts or notebooks
+- Docker is installed; the image still needs building
+
 ## Result
 
-*Empty until the run. Record the number, the date, whether the threshold was met, and anything that
-had to be changed to make the workflow run.*
+*Empty until the run. Record the number, the date, the classifier and repetition count, whether the
+threshold was met, and anything that had to be changed to make the workflow run.*
