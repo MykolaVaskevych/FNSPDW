@@ -35,20 +35,41 @@ own devices only, unless ethics approval is in place first.
 
 ## The gap this fills
 
-Stated precisely, because the whole project rests on it and a loose version will not survive a viva.
-**Restate it from here, never from memory.**
+Stated precisely, because the whole project rests on it and a loose version will not survive a
+viva. **Restate it from here, never from memory.** Checked 2026-11-24.
 
-The only public measurement of DAITA is `pulls2024daitaeval`, a June 2024 blog post by Tobias
-Pulls, who wrote Maybenot and states on that page that he works with Mullvad on DAITA. It is
-therefore not independent. It covers **one website** (kau.se, chosen to avoid CDN variability),
-from **Windows clients**, across eight servers, against **DAITA v1**, over 80,000 traces. It
-reports cost — around 2–4 MiB and 1–3 seconds per website visit — and publishes **no attack
-accuracy figures**. Mullvad's own commissioned GotaTun audit, by Assured Security Consultants,
-explicitly excluded the DAITA code. A newer DAITA version has since shipped. Consumer review sites
-quote overhead percentages with no stated source.
+**There is no evaluation of DAITA against *website* fingerprinting by anyone unaffiliated with
+Mullvad.** Three pieces of work exist and none of them closes that:
 
-So: no measurement of DAITA by anyone unaffiliated with Mullvad exists, and the protection it
-provides has never been publicly quantified by anyone at all. Checked 2026-11-23.
+- **`pulls2024daitaeval`** — the only website-fingerprinting measurement. A June 2024 blog post by
+  Tobias Pulls, who wrote Maybenot and states on the page that he works with Mullvad on DAITA, so
+  not independent. One website (kau.se), Windows clients, eight servers, DAITA v1, 80,000 traces.
+  It says DAITA "reduces the success rate of both DF and RF attacks" and costs "around 2-4 MiB of
+  bandwidth overhead and 1-3 seconds of delay per website visit" — but puts no accuracy numbers in
+  the text.
+- **`bjorklund2025video`** — the only evaluation by authors with no stated Mullvad affiliation, and
+  it is about **video**, not websites. USENIX Security 2025, honourable mention. "A brief
+  experiment streaming **five videos** with and without DAITA activated": it "effectively mitigates
+  the attack" but "doubles bandwidth usage at best". Their own conclusion is the invitation —
+  *"further research is required to thoroughly evaluate its efficacy."*
+- **`ridderland2026mole`** — a 2026 Chalmers MSc thesis that **contradicts** the one above: "only
+  78% of DAITA streams remain unidentified", which "refutes what was previously thought, that DAITA
+  provided full protection". Also video. Its advisor is Odd Stranne of Mullvad VPN, so not
+  independent either, and its supervisor is `bjorklund2025video`'s co-author.
+
+On top of that, Mullvad's own commissioned GotaTun audit, by Assured Security Consultants,
+**explicitly excluded the DAITA code**; a newer DAITA version has since shipped; and consumer
+review sites quote overhead percentages with no stated source.
+
+So the literature on a deployed defence consists of one vendor-adjacent blog post about websites,
+one five-video preliminary test, and one thesis that disagrees with it. That is the gap, and it is
+narrower and more defensible than "nobody has evaluated DAITA" — which was the wording here until
+2026-11-24 and is false.
+
+Five axes make a new measurement a contribution rather than a repeat, each one something no
+existing work covers together: **website** fingerprinting rather than video, many websites rather
+than one, Linux rather than Windows, the current DAITA version, and **accuracy reported as well as
+cost**, with the adversary retrained against each configuration.
 
 ## The attacker, graded by ambition
 
@@ -84,11 +105,19 @@ is a pass; a null result measured badly is a fail. Headline findings are upside,
 ## Time available
 
 Taught modules are heavier this semester and lighten from January, so the rest of this year is
-part-time research and the real work starts in the new year. Exam dates are not published yet;
-December and May are assumed to be reduced months and this plan will be corrected once the dates
-are known.
+part-time research and the real work starts in the new year.
 
-Rough effort: ~10 h/week to December, ~20 h/week January to April, full-time from May.
+Exam dates are now published, and they are not what this plan originally assumed. From Trinity's
+2026-27 academic year calendar: **Semester 1 assessment 10-22 December 2026**; Hilary teaching ends
+**9 April 2027**; **Semester 2 assessment 19-30 April 2027**; marking and results to 21 May, with
+research time opening up from late May.
+
+So the reduced months are **December and April** — not December and May, which is what this file
+said until 2026-11-24. April had been given the cost-curve work and an end-of-month gate, both of
+which sat inside the exam period. They moved to May.
+
+Rough effort: ~10 h/week to December, ~20 h/week January to March, reduced through April,
+full-time from May.
 
 ## Month by month
 
@@ -100,8 +129,14 @@ absence is the finding.
 
 **November** — reproduce a published baseline. The candidate is `smith2021quicage`: about 117,000
 QUIC and TCP traces, released with code, the only large public dataset that is actually QUIC rather
-than Tor. `siby2023quic` is the closest work to this project but ships no code and no data, so it
-cannot be reproduced; `zhan2021earlyquic` ships nothing either.
+than Tor.
+
+`siby2023quic` is the closer work and **does** ship an artifact — `spring-epfl/quic-wf-defenses`,
+with capture scripts, feature extraction, a random-forest attack for both adversary models, both
+defence setups and a Dockerfile. The reason not to use it as the November baseline is narrower:
+**its dataset link is dead** (SWITCHDrive, 404 as of 2026-11-24) and the repo carries no licence,
+so reproducing it means collecting the captures first, which is weeks rather than days. Worth
+revisiting in February, when captures are the job anyway. `zhan2021earlyquic` ships nothing.
 
 **December** — reduced month, two jobs. Re-evaluate the November result with deduplicated,
 time-split data; a lot of published accuracy here is inflated by leaky splits, so this doubles as a
@@ -124,12 +159,14 @@ rather than a repeat, each one an axis the only existing measurement did not cov
 rather than one, Linux rather than Windows, the current DAITA version, **accuracy reported as well
 as cost**, and the adversary retrained against each configuration.
 
-**April** — my own padding strategies on Maybenot. Begin the cost curve: leakage against overhead,
-several configurations, adversary retrained for each.
+**April** — reduced month: teaching ends 9 April and Semester 2 exams run 19-30 April. Keep it
+light and low-risk — write up the March DAITA measurement while it is fresh, and get the Maybenot
+strategies written and compiling, without depending on results landing this month.
 
-**May** — reduced month, exams assumed. Finish the remaining configurations and complete the curve.
+**May** — the first full-time month. My own padding strategies on Maybenot, and the cost curve:
+leakage against overhead, several configurations, adversary retrained for each.
 
-**June** — one extension. Start writing: methods and results chapters first, while fresh.
+**June** — one extension. Keep writing: methods and results chapters first, while fresh.
 
 **July** — full draft to Farrell. Fill gaps the draft exposes.
 
@@ -147,7 +184,7 @@ table only names the decision.
 | mid Dec | that result survives honest re-evaluation on deduplicated, time-split data | the gap between the two numbers *is* the methods contribution |
 | end Feb | my own captures reproduce published-level accuracy | simplify the capture path rather than perfecting it; fall back to public datasets |
 | end Mar | DAITA produces a measurable accuracy drop | report the null honestly; the cost measurement stands on its own |
-| end Apr | a defensible cost curve exists, whatever its shape | the deployment-failure analysis carries the evaluation chapter instead |
+| end May | a defensible cost curve exists, whatever its shape | the deployment-failure analysis carries the evaluation chapter instead |
 
 Reproducing somebody's number and re-evaluating it honestly are separate jobs with separate failure
 modes. Bundling them hid the fact that the second is the one with intellectual content.
@@ -161,8 +198,8 @@ realistic failure modes are narrower, and each has a fallback that reuses the sa
 | failure mode | fallback, and why it still counts |
 |---|---|
 | The published baseline will not reproduce | **That is the finding**, and `deng2025realistic` says to expect it. A documented failure to reproduce, with the reason, is a methods contribution. Fall back to a second baseline, not a second topic. |
-| The defence is cheap and effective | Contribution becomes the cost curve itself, plus deployment-failure analysis. A defence that holds in the lab and breaks under load, disconnection or slow clients is a real finding — the pilot already found three such failures. |
-| DAITA works well | The first measurement by anyone unaffiliated with Mullvad still stands, and its *accuracy* has never been published by anyone — only its cost, once, by the Maybenot author. |
+| The defence is cheap and effective | Contribution becomes the cost curve itself, plus deployment-failure analysis. A defence that holds in the lab and breaks under load, disconnection or slow clients is a real finding. The inherited pilot saw failures of this kind, but its numbers are not citable, so treat that as a reason to look rather than as evidence. |
+| DAITA works well | The first *website*-fingerprinting evaluation of it by anyone unaffiliated with Mullvad still stands. `bjorklund2025video` called for exactly that, and `ridderland2026mole` already found it is not airtight for video — 78 % of streams unidentified, not 100 %. |
 | No queueing channel under load | Report the negative with the conditions under which it would appear (loaded relay, shared link, contended uplink). That chapter becomes more cost-curve configurations instead. |
 | Someone publishes it first | Independent reproduction on real hardware still stands and is undervalued. Re-check the literature every two months so it is never a surprise in the viva. |
 | The testbed eats the year | Hard stop: if it is not producing clean captures by a pre-set date, simplify rather than perfect. |
@@ -279,7 +316,8 @@ sorting is manual.
 **3 needed for experiments** — `siby2023quic` `gong2020front` `cai2014tamaraw` `smith2022qcsd`
 `khajavi2026lightening` `cebere2026http2` `deng2025realistic` `yu2026proxydrift`
 `jansen2024genuine` `jansen2026cellshift` `sabzi2024netshaper` `pulls2023maybenot`
-`pulls2024daitaeval` `gahtan2024visquic` `witwer2026dodge` `hasselquist2024raising`
+`pulls2024daitaeval` `bjorklund2025video` `ridderland2026mole` `gahtan2024visquic`
+`witwer2026dodge` `hasselquist2024raising`
 
 **4 state of the art** — `pulls2026ephemeral` `song2026llmwf` `wang2026cease` `zhao2026llmwf`
 `cheng2026star`
@@ -287,13 +325,21 @@ sorting is manual.
 ### What the recent half is for
 
 - **`siby2023quic`** — Siby, Barman and Troncoso with Cloudflare. The question, already asked for
-  QUIC: padding alone is not sufficient. The closest published work to this dissertation, and it
-  ships nothing, so it is to argue with rather than reproduce. Its numbers: FRONT needs 2.31
-  overhead for a ~70 % F1 drop on top of a mean 612 kB per trace; and in the NetFlow setting most
-  of the privacy gain came from the observer's own **sampling**, not the padding (−54.1 % versus
-  −20.1 % at NetFlow 1 %).
-- **`pulls2024daitaeval`** — grey literature, required reading, ten minutes. The only existing
-  DAITA measurement, and the thing March has to improve on.
+  QUIC: padding alone is not sufficient. The closest published work to this dissertation. Ships
+  code and Docker at `spring-epfl/quic-wf-defenses`; its dataset link is dead. Its numbers, stated
+  carefully because the paper's own notation is loose: the undefended random forest scores
+  **F1 95.8** on MAIN. FRONT at its heaviest setting brings that to **31.4 at an overhead of
+  2.31** — the paper calls that a "≈ 70 % F1-score drop", which is the *relative* fall, not 70
+  points. That is on top of a mean 612 kB per trace already spent hiding local and global features.
+  And in the NetFlow setting most of the privacy gain came from the observer's own **sampling**
+  rather than the padding: at NetFlow 1 %, 54.1 points of F1 lost to sampling against 20.1 to
+  padding, from the same 95.8 baseline.
+- **`pulls2024daitaeval`** — grey literature, required reading, ten minutes. The only DAITA
+  measurement against *website* fingerprinting, and the thing March has to improve on.
+- **`bjorklund2025video`** and **`ridderland2026mole`** — the only other DAITA evaluations, both
+  about video and both reaching different conclusions. The first asks for thorough evaluation in
+  so many words; the second finds 78 % of DAITA streams unidentified, refuting the first. Read
+  both before the March measurement: they are the nearest thing to prior art on it.
 - **`gong2020front`** and **`cai2014tamaraw`** — FRONT and Tamaraw, the two defences everyone
   measures against. Prerequisites, not background: reading the 2026 papers without these is reading
   arguments without the claims. Cai also derives a lower bound on the bandwidth cost of *any*
@@ -347,6 +393,8 @@ client-side QUIC defence. `robshahla/VisQUIC` — QUIC pcaps with TLS keys.
 |---|---|---|---|
 | `sirinam2018deep` | yes | yes | `deep-fingerprinting/df` |
 | `smith2021quicage` | yes | yes, ~117k QUIC+TCP | `jpcsmith/wf-in-the-age-of-quic` |
+| `siby2023quic` | yes, + Docker | **link dead** | `spring-epfl/quic-wf-defenses` |
+| `bjorklund2025video` | yes | yes, incl. DAITA pcaps | `trustcom/endangered-privacy` + `doi.org/10.5281/zenodo.15051891` |
 | `smith2022qcsd` | yes | — | `jpcsmith/neqo-qcsd` |
 | `gong2020front` | yes | yes | `websitefingerprinting/WebsiteFingerprinting` |
 | `cai2014tamaraw` | yes | yes | `crysp.uwaterloo.ca/software/` |
@@ -373,8 +421,12 @@ decrypts; some were captured under a key they do not ship.
 
 **Before planning around any of them:**
 
-- **`siby2023quic` and `zhan2021earlyquic` ship nothing.** No availability statement, no artifact
-  section. The closest work to this project cannot be reproduced.
+- **`siby2023quic` ships code but not data.** `spring-epfl/quic-wf-defenses` has the capture
+  scripts, the attack, both defences and a Dockerfile; the SWITCHDrive dataset link 404s and there
+  is no licence file. Nothing about the artifact appears in the PDF — PoPETs links artifacts from
+  the paper's web page — which is why an audit that only reads PDFs misses it. **Check the
+  publisher's artifact link, not just the paper.**
+- **`zhan2021earlyquic` ships nothing.** No repository, no availability statement.
 - **`deng2025realistic` ships nothing.** Its axes are reusable; its harness does not exist.
 - **`pulls2023maybenot` has two versions.** arXiv 2304.09510v1 (April 2023) is the WPES 2023 paper
   the citekey refers to; v2 (September 2024) documents *framework version 2*, which is what to read
@@ -425,13 +477,24 @@ undefended accuracy, 0.43 with shaping, at roughly 14× bandwidth and 3.9× late
 deployment failures; the novel one was cover traffic leaking the server's queue delay under
 concurrency. *Superseded 2026-10-20.*
 
-**2026-09-22** — Title agreed: *Network Side-Channel Leakage in Encrypted LLM Streaming Traffic*.
-Farrell then asked what makes LLM traffic any different and how it would be generated, and
-suggested plain web traffic instead. *Superseded 2026-10-20.*
 
 **2026-09** — Starter pack declared QUIC and Maybenot "permanently out of scope". It was
 AI-generated and deleted exactly what the supervisor had asked for. *Reversed; both are central.
 It is not authority.*
+
+
+**2026-09-22** — Title agreed: *Network Side-Channel Leakage in Encrypted LLM Streaming Traffic*.
+Farrell then asked what makes LLM traffic any different and how it would be generated, and
+suggested plain web traffic instead. *Superseded 2026-10-20.*
+
+
+**2026-10-01** — Measured that OpenAI sends one token per SSE event but pads every event to a
+constant size with an `obfuscation` field whose length compensates for the token. Against
+gpt-4.1-nano, `"Hi"` + 5 pad and `"!"` + 6 pad both give 312 bytes. Residual leaks: the terminal
+event is 296 bytes not 312, and event count still reveals token count. *This is the measurement
+that caused the 2026-10-20 scope change; it was dated 2026-11-03 here until 2026-11-24, which put
+the effect two weeks before its cause.*
+
 
 **2026-10-20** — **LLM dropped. Topic returned to Farrell's suggestion: does padding actually
 help, on plain TLS and QUIC web traffic.** Reason: `experiments/token-batching` measured that
@@ -439,30 +502,64 @@ OpenAI pads every streamed event to a constant size, closing the channel the att
 The measurement is kept as motivation, not as a chapter. *Supersedes the 2026-09 topic, the
 2026-09-22 title, and the leak-granularity framing.*
 
+
 **2026-11-03** — Zotero's `disertation` collection became the single source of truth for
 references, auto-exported by Better BibTeX to `paper/src/bibs/ref.bib`.
+
 
 **2026-11-03** — All inherited citations resolved. NetShaper, Dyer, Askarov/Zhang (2010 and 2011),
 Wright, Whisper Leak and Weiss all real. **NetEcho is real** — calling it plausibly fabricated was
 wrong. **PromptEcho does not resolve**; dropped. Three entries had authors missing.
 
-**2026-11-03** — Measured that OpenAI sends one token per SSE event but pads every event to a
-constant size with an `obfuscation` field whose length compensates for the token. Against
-gpt-4.1-nano, `"Hi"` + 5 pad and `"!"` + 6 pad both give 312 bytes. Residual leaks: the terminal
-event is 296 bytes not 312, and event count still reveals token count.
 
 **2026-11-20** — Closed as out of scope, kept for the record: whether Anthropic pads the same way;
 whether self-hosted servers pad at all; whether OpenAI's padding survives to the wire given events
 arrive in pairs ~17 µs apart; whether anyone has done the LLM token-length channel over QUIC. All
 interesting, none of them this dissertation. *Do not reopen without Farrell agreeing first.*
 
+
 **2026-11-23** — DAITA gap claim tightened. It had been "nobody has independently evaluated DAITA",
 which is too strong — `pulls2024daitaeval` exists. The precise version is above and is *stronger*,
 because it names the five axes the existing measurement did not cover.
 
+
 **2026-11-23** — End-November gate split in two: reproduce by end November, survive honest
-re-evaluation by mid-December. Also recorded: `siby2023quic` cannot be reproduced, so the baseline
-is `smith2021quicage`.
+re-evaluation by mid-December. *The reason recorded here for choosing the baseline was wrong — see
+2026-11-24.*
+
+
+**2026-11-24** — **`siby2023quic` does ship an artifact.** `spring-epfl/quic-wf-defenses`: capture
+scripts, feature extraction, a random-forest attack for both adversary models, both defence setups,
+a Dockerfile. This file had said it "ships nothing" in four places. The cause of the error: the
+artifact audit extracted links from the PDFs only, and PoPETs links artifacts from the paper's web
+page, so nothing about it appears in the paper. **Audit the publisher's artifact link too.**
+`smith2021quicage` stays the November baseline, for the narrower and verified reason that Siby's
+SWITCHDrive dataset link 404s and the repo has no licence, so running it means capturing first.
+
+
+**2026-11-24** — **DAITA gap claim corrected and narrowed.** It had read "the protection it
+provides has never been publicly quantified by anyone at all", which is false. `bjorklund2025video`
+(USENIX Security 2025, honourable mention, no stated Mullvad affiliation) evaluated DAITA on five
+videos and `ridderland2026mole` (Chalmers MSc 2026, Mullvad advisor) found 78 % of DAITA streams
+unidentified, contradicting it. Both are video fingerprinting. The claim is now "no evaluation
+against *website* fingerprinting by anyone unaffiliated with Mullvad", which is narrower, citable,
+and strengthened by `bjorklund2025video` asking for exactly this work. Also corrected:
+`pulls2024daitaeval` does state DAITA reduces DF and RF success rates, it just prints no numbers in
+the text.
+
+
+**2026-11-24** — **Exam dates published; April is a reduced month, not May.** Semester 2 assessment
+is 19-30 April 2027 and Hilary teaching ends 9 April. The cost-curve work and the end-of-month gate
+had been put in April, inside the exam period; both moved to May. Semester 1 assessment is 10-22
+December 2026, which December already allowed for.
+
+
+**2026-11-24** — Numbers in the `siby2023quic` entry corrected. The undefended random forest scores
+F1 95.8; FRONT's heaviest setting gives 31.4 at overhead 2.31, and the paper's "≈ 70 % drop" is
+relative, not 70 points. The sampling-versus-padding figures are F1 points off that 95.8 baseline,
+not percentages. Also: the fallback table had cited the inherited pilot's failures as evidence,
+which contradicts the pilot's own README saying its numbers are not citable.
+
 
 **2026-11-24** — Collapsed `PLAN.md`, `notes/PROJECT.md`, `DECISIONS.md` and `CONTEXT.md` into this
 one file. Four documents describing one project is how the drift started; nothing was lost in the
