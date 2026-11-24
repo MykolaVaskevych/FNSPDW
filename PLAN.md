@@ -206,8 +206,9 @@ satisfies the generality requirement while staying the most original idea availa
 - Literature: DOI or arXiv ID, fetched and quoted. "Unsure" is said out loud.
 - Time-box the testbed. A minimal real path producing one honest number beats a perfect lab.
 
-**Commits** (this repo and `paper/`). I name every commit — ask me for the message, never commit
-unasked. One line, no body. Never mention Claude or AI: no `Co-Authored-By`, no "Generated with".
+**Commits** (this repo and `paper/`). The message is always `update`. One line, no body, no
+exceptions, and never a mention of Claude or AI — no `Co-Authored-By`, no "Generated with". Set
+2026-11-24, replacing the previous rule of asking for a message every time.
 
 **Code.** Comment to carry domain knowledge, not syntax — `TCP_NODELAY` earns a note about Nagle,
 `rows = []` earns nothing. Every file opens with a docstring saying what it does and why it exists.
