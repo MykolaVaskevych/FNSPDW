@@ -106,13 +106,63 @@ Either way the threshold has to name the classifier and the number of repetition
 above does not, which is a defect in the pre-registration found before any data was collected —
 which is the point of writing it first.
 
+### The 4090 cannot be used, verified
+
+TensorFlow 2.2.0 detects the card and then refuses it, in its own words:
+
+```
+name: NVIDIA GeForce RTX 4090  computeCapability: 8.9
+Skipping registering GPU devices...
+GPUs visible: []
+```
+
+TF 2.2.0 ships CUDA 10.1 kernels and tops out at compute capability 7.5. Ada Lovelace is 8.9, two
+generations later. So Var-CNN trains on **CPU**, and the choice is CPU time or porting the code to
+a modern TensorFlow — which would no longer be "their code".
+
+### Two things the artifact needs that its own instructions do not mention
+
+Both are reproducibility findings in their own right, and both are the kind of thing
+`deng2025realistic` predicts:
+
+1. **`requirements.txt` is under-pinned.** It does not pin protobuf, so a current resolver installs
+   protobuf 5.x and TensorFlow 2.2.0 dies with `TypeError: Descriptors cannot be created
+   directly`. Fix: `protobuf<3.21`. Nothing in the repo says this.
+2. **The workflow cannot start from the published dataset alone.** `select_traces` declares inputs
+   from the *removing-control-packets* workflow, which the 871 MB archive does not contain, so
+   Snakemake refuses to build a DAG even though `results/open-world-dataset.hdf` is present and is
+   what the rule would produce. Workaround: create empty placeholders at the two declared input
+   paths and touch the dataset so it is newest. `select_traces` then drops out of the DAG.
+
+### The run as actually configured
+
+Target `results/plots/confusion-matrix.tex` with `n_repetitions=1` resolves to **8 jobs**, of which
+**2 are Var-CNN trainings** (`varcnn-sizes` and `varcnn-time`, which are combined to make the
+Var-CNN prediction set). `select_traces` is correctly absent.
+
+```bash
+cd out/repo/workflows/generalisability-analysis
+../../env/bin/snakemake -j1 results/plots/confusion-matrix.tex --config n_repetitions=1
+```
+
+Note the target must come *before* `--config`, or Snakemake 5.20.1 swallows it as a config pair.
+
+**Threshold for this run, given 1 repetition on CPU instead of 10 on GPU:** the +/- 3 pp band above
+is too tight for a single repetition. Widen to **+/- 10 pp of 96 %**, i.e. 4,300-5,000 of 5,000,
+and report it as "one repetition, CPU, wider interval than the paper's" rather than as a clean
+reproduction. If the single run lands inside that, the pipeline is sound and the gate is met.
+
 ### Already done, so the run can start cold
 
 - Dataset downloaded and extracted to `out/repo/workflows/generalisability-analysis/results/`
 - `github.com/jpcsmith/wf-in-the-age-of-quic` cloned to `out/repo` (shallow)
 - `git-lfs` is **not** installed and is **not needed** for this workflow — LFS there covers
   chromedriver binaries and data files, not the Snakefile, rules, scripts or notebooks
-- Docker is installed; the image still needs building
+- Python 3.8.20 venv at `out/repo/env`, built with `uv`, all requirements installed plus
+  `protobuf<3.21` and `snakemake==5.20.1`. Verified: numpy, sklearn, pandas, h5py, tensorflow and
+  the authors' own `lab` and `doceasy` packages all import
+- Both VCS dependencies still resolve at their pinned tags (`doceasy@v0.4.0`, `wf-tools@v0.3.0`)
+- Docker is installed but **not needed** — it is only used by the trace-collection workflow
 
 ## Result
 
