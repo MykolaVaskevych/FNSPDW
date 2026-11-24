@@ -164,6 +164,13 @@ reproduction. If the single run lands inside that, the pipeline is sound and the
 - Both VCS dependencies still resolve at their pinned tags (`doceasy@v0.4.0`, `wf-tools@v0.3.0`)
 - Docker is installed but **not needed** — it is only used by the trace-collection workflow
 
+## State as of 2026-11-24
+
+**The run has not been started.** Everything above it is done: dataset downloaded and extracted,
+repo cloned, Python 3.8 environment built and verified, the two install/workflow defects worked
+around, and the dependency graph dry-run clean at 8 jobs. The single command to launch it is in
+*The run as actually configured* above. Nothing is half-finished — starting it is one command.
+
 ## Result
 
 *Empty until the run. Record the number, the date, the classifier and repetition count, whether the

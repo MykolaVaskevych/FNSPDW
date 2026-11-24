@@ -321,6 +321,26 @@ public dataset, not my own browsing. Captures and datasets stay out of git.
 **The paper** lives in the `paper/` submodule and has its own rules in `paper/CLAUDE.md` — read
 them before touching anything there. No comments in LaTeX unless I ask.
 
+**Overleaf sync is automated, both directions.** Two GitHub Actions in the `paper` repo, driven by
+the repo secrets `OVERLEAF_PROJECT_ID` and `OVERLEAF_TOKEN`, using Overleaf's **Git integration**:
+
+- *Push to Overleaf* fires on every push to `main` and lands in under a minute. It never
+  force-pushes; a rejection means Overleaf has edits GitHub has not seen.
+- *Pull from Overleaf* runs hourly at :17. It fast-forwards `main` when nothing can be lost, and
+  **opens a pull request instead of merging** when both sides changed.
+
+`./update.sh` does the whole chain, including the submodule pointer. Overleaf's own **GitHub Sync
+was unlinked on 2026-11-24** — running it alongside the Actions produced duplicate commits on a
+stale base and a spurious merge conflict. Do not re-enable it.
+
+Three things that bite:
+- Overleaf's copy of `ref.bib` goes stale between syncs. On a merge, **take my text from Overleaf
+  and `ref.bib` from Zotero** — Overleaf's is a snapshot, Zotero's is the source of truth.
+- Overleaf's Git integration has no branches and **forbids force pushes**, which is why the two
+  histories had to be reconciled by merging rather than overwriting.
+- Up to an hour of lag Overleaf to GitHub. Editing the same file in both places inside that window
+  is the one reliable way to manufacture a conflict.
+
 **Bibliography.** Zotero owns it. The `disertation` collection is the source of truth and Better
 BibTeX auto-exports it to `paper/src/bibs/ref.bib`, which is what `main.tex` reads. That file is
 machine-written — never hand-edit it; anything typed in is lost on the next export. Add a paper in
@@ -510,6 +530,9 @@ decrypts; some were captured under a key they do not ship.
   can attach a PDF to a new item but not to an existing one, so it is a drag each.
 - `cebere2026http2` is typed `@inproceedings` but is a preprint, which produces an empty-booktitle
   warning. Change the Zotero item type to Preprint.
+- `maybenot2023` has an **empty University field**. It should read `University of
+  Minnesota-Twin Cities` — Witwer's senior thesis, supervised by Nicholas Hopper. It currently
+  prints as "Senior Thesis, 2023", which is incomplete but not wrong.
 - NDSS, PoPETs and INFOCOM are where this work lands and search engines rank them badly, so read
   the proceedings listings directly. Searching an author's recent arXiv output beats searching a
   title — three papers here came from one such listing and none had surfaced in a title search.
