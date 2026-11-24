@@ -50,8 +50,12 @@ Mullvad.** Three pieces of work exist and none of them closes that:
 - **`bjorklund2025video`** — the only evaluation by authors with no stated Mullvad affiliation, and
   it is about **video**, not websites. USENIX Security 2025, honourable mention. "A brief
   experiment streaming **five videos** with and without DAITA activated": it "effectively mitigates
-  the attack" but "doubles bandwidth usage at best". Their own conclusion is the invitation —
-  *"further research is required to thoroughly evaluate its efficacy."*
+  the attack" but "doubles bandwidth usage at best". Their closing line is *"further research is
+  required to thoroughly evaluate its efficacy"* — worth quoting, but it is a generic closing
+  sentence, not a call for website-fingerprinting work specifically, and should not be oversold as
+  one. `bjorklund2024thesis` is the author's MSc thesis behind it and carries the fuller version of
+  the same experiment: ten minutes per service, first 100 s discarded, **no** video identified with
+  DAITA on.
 - **`ridderland2026mole`** — a 2026 Chalmers MSc thesis that **contradicts** the one above: "only
   78% of DAITA streams remain unidentified", which "refutes what was previously thought, that DAITA
   provided full protection". Also video. Its advisor is Odd Stranne of Mullvad VPN, so not
@@ -65,6 +69,16 @@ So the literature on a deployed defence consists of one vendor-adjacent blog pos
 one five-video preliminary test, and one thesis that disagrees with it. That is the gap, and it is
 narrower and more defensible than "nobody has evaluated DAITA" — which was the wording here until
 2026-11-24 and is false.
+
+**What was searched, so the claim can be re-checked rather than trusted.** On 2026-11-23 and
+2026-11-24: OpenAlex and the arXiv API by title and by author; the NDSS, PoPETs, USENIX Security
+and INFOCOM proceedings listings; web search for independent DAITA evaluation, overhead and
+measurement; Mullvad's own blog and help pages (both `/blog/daita-v2` and `/help/daita` 404'd, so
+the current version's claims are still unverified from a primary source); and the Chalmers thesis
+repository. A claimed thesis by "Henriksson & Liman" on DAITA and video fingerprinting could not be
+found in any of those and should not be cited unless someone produces it. Re-check before this goes
+in front of an examiner — it is a negative claim about a live product and it has already been
+wrong twice.
 
 Five axes make a new measurement a contribution rather than a repeat, each one something no
 existing work covers together: **website** fingerprinting rather than video, many websites rather
@@ -127,9 +141,24 @@ padding, FRONT and Tamaraw as the two defences everyone measures against, NetSha
 write a one-page summary of what each actually claims. There are no DAITA papers to read; that
 absence is the finding.
 
-**November** — reproduce a published baseline. The candidate is `smith2021quicage`: about 117,000
-QUIC and TCP traces, released with code, the only large public dataset that is actually QUIC rather
-than Tor.
+**November** — reproduce a published baseline: `smith2021quicage`, about 117,000 QUIC and TCP
+traces with code, the only large public dataset that is actually QUIC rather than Tor.
+
+**The download is 871 MB, not 30 GB**, and that is what makes the gate reachable. The processed
+`quic-wf-core.tgz` has the open-world dataset in HDF5 with labels, sizes and timestamps. The raw
+tar is ~30 GB in six parts and is not needed. Both the polybox links in the README are dead; the
+live copy is the ETH Research Collection record behind `doi.org/10.3929/ethz-b-000456101`, fetched
+through the DSpace content endpoint (verified 2026-11-24 by pulling bytes and checking the gzip
+magic, not by trusting the link):
+
+```
+curl -L -o quic-wf-core.tgz \
+  https://www.research-collection.ethz.ch/server/api/core/bitstreams/ab483811-4adf-4967-9737-43044ca3a149/content
+```
+
+There is also a 7.25 GB VM image in the same record with code and data preloaded, if setup turns
+out to be the slow part. Compute is modest: the authors ran each experiment on 2-4 cores with 6 GB
+per core.
 
 `siby2023quic` is the closer work and **does** ship an artifact — `spring-epfl/quic-wf-defenses`,
 with capture scripts, feature extraction, a random-forest attack for both adversary models, both
@@ -138,11 +167,12 @@ defence setups and a Dockerfile. The reason not to use it as the November baseli
 so reproducing it means collecting the captures first, which is weeks rather than days. Worth
 revisiting in February, when captures are the job anyway. `zhan2021earlyquic` ships nothing.
 
-**December** — reduced month, two jobs. Re-evaluate the November result with deduplicated,
-time-split data; a lot of published accuracy here is inflated by leaky splits, so this doubles as a
-methods chapter and a check that the pipeline is sound, and `deng2025realistic` supplies the axes.
-Then the capture pipeline end to end: dumpcap to features to classifier on my own hardware, with
-small first captures of generated traffic.
+**December** — exams run 10-22 December, so this is a reduced month with the real work in its first
+week. By 9 December: re-evaluate the November result with deduplicated, time-split data. A lot of
+published accuracy here is inflated by leaky splits, so this doubles as a methods chapter and a
+check that the pipeline is sound, and `deng2025realistic` supplies the axes. After exams, if
+anything is left: the capture pipeline end to end, dumpcap to features to classifier on my own
+hardware.
 
 **January 2027** — first version of the Rust flow-feature extractor, validated field by field
 against tshark. Python has nfstream; Rust has nothing comparable, so this is a reusable output as
@@ -181,13 +211,18 @@ table only names the decision.
 | when | gate | if it fails |
 |---|---|---|
 | end Nov | a published baseline reproduces — their code, their data, their number | the methods finding becomes the first contribution and the schedule shifts right |
-| mid Dec | that result survives honest re-evaluation on deduplicated, time-split data | the gap between the two numbers *is* the methods contribution |
+| **9 Dec** | that result survives honest re-evaluation on deduplicated, time-split data | slips to early January, and that is acceptable — Semester 1 assessment runs 10-22 December |
 | end Feb | my own captures reproduce published-level accuracy | simplify the capture path rather than perfecting it; fall back to public datasets |
 | end Mar | DAITA produces a measurable accuracy drop | report the null honestly; the cost measurement stands on its own |
 | end May | a defensible cost curve exists, whatever its shape | the deployment-failure analysis carries the evaluation chapter instead |
 
 Reproducing somebody's number and re-evaluating it honestly are separate jobs with separate failure
 modes. Bundling them hid the fact that the second is the one with intellectual content.
+
+The second gate sits on **9 December**, the day before Semester 1 assessment opens, not mid-month:
+it had been put inside the exam period, the same error that had the cost curve inside the April
+exams. The re-evaluation reuses the November dataset and codebase and only changes the splits, so
+two weeks is plausible — but the slip to January is pre-registered rather than improvised.
 
 ## If a gate fails
 
@@ -316,8 +351,8 @@ sorting is manual.
 **3 needed for experiments** — `siby2023quic` `gong2020front` `cai2014tamaraw` `smith2022qcsd`
 `khajavi2026lightening` `cebere2026http2` `deng2025realistic` `yu2026proxydrift`
 `jansen2024genuine` `jansen2026cellshift` `sabzi2024netshaper` `pulls2023maybenot`
-`pulls2024daitaeval` `bjorklund2025video` `ridderland2026mole` `gahtan2024visquic`
-`witwer2026dodge` `hasselquist2024raising`
+`pulls2024daitaeval` `bjorklund2025video` `bjorklund2024thesis` `ridderland2026mole`
+`gahtan2024visquic` `witwer2026dodge` `hasselquist2024raising`
 
 **4 state of the art** — `pulls2026ephemeral` `song2026llmwf` `wang2026cease` `zhao2026llmwf`
 `cheng2026star`
@@ -336,10 +371,12 @@ sorting is manual.
   padding, from the same 95.8 baseline.
 - **`pulls2024daitaeval`** — grey literature, required reading, ten minutes. The only DAITA
   measurement against *website* fingerprinting, and the thing March has to improve on.
-- **`bjorklund2025video`** and **`ridderland2026mole`** — the only other DAITA evaluations, both
-  about video and both reaching different conclusions. The first asks for thorough evaluation in
-  so many words; the second finds 78 % of DAITA streams unidentified, refuting the first. Read
-  both before the March measurement: they are the nearest thing to prior art on it.
+- **`bjorklund2025video`**, **`bjorklund2024thesis`** and **`ridderland2026mole`** — the only other
+  DAITA evaluations, all three about video, and they disagree. Björklund found no video identified
+  with DAITA on; Ridderland and Tagra found 78 % unidentified, i.e. roughly one in five still
+  identified, and say so explicitly refutes the earlier "full protection" reading. Read all three
+  before the March measurement — they are the nearest thing to prior art, and the disagreement
+  between them is itself worth a paragraph.
 - **`gong2020front`** and **`cai2014tamaraw`** — FRONT and Tamaraw, the two defences everyone
   measures against. Prerequisites, not background: reading the 2026 papers without these is reading
   arguments without the claims. Cai also derives a lower bound on the bandwidth cost of *any*
@@ -392,9 +429,11 @@ client-side QUIC defence. `robshahla/VisQUIC` — QUIC pcaps with TLS keys.
 | paper | code | data | where |
 |---|---|---|---|
 | `sirinam2018deep` | yes | yes | `deep-fingerprinting/df` |
-| `smith2021quicage` | yes | yes, ~117k QUIC+TCP | `jpcsmith/wf-in-the-age-of-quic` |
+| `smith2021quicage` | yes | yes, 871 MB processed / ~30 GB raw | `jpcsmith/wf-in-the-age-of-quic` + `doi.org/10.3929/ethz-b-000456101` (README's polybox links are dead) |
 | `siby2023quic` | yes, + Docker | **link dead** | `spring-epfl/quic-wf-defenses` |
 | `bjorklund2025video` | yes | yes, incl. DAITA pcaps | `trustcom/endangered-privacy` + `doi.org/10.5281/zenodo.15051891` |
+| `bjorklund2024thesis` | — | — | thesis only, `odr.chalmers.se` |
+| `ridderland2026mole` | — | — | thesis only, `odr.chalmers.se` |
 | `smith2022qcsd` | yes | — | `jpcsmith/neqo-qcsd` |
 | `gong2020front` | yes | yes | `websitefingerprinting/WebsiteFingerprinting` |
 | `cai2014tamaraw` | yes | yes | `crysp.uwaterloo.ca/software/` |
@@ -560,6 +599,23 @@ relative, not 70 points. The sampling-versus-padding figures are F1 points off t
 not percentages. Also: the fallback table had cited the inherited pilot's failures as evidence,
 which contradicts the pilot's own README saying its numbers are not citable.
 
+
+**2026-11-24** — Second review of the corrected gap claim, by another assistant. Four findings
+held. The **mid-December gate was inside Semester 1 assessment** (10-22 December) — the same error
+just fixed for April — and moved to 9 December with a pre-registered slip to January. The claim
+that `bjorklund2025video` "asks for your work by name" was an **overstatement**: its closing line
+is generic and is now quoted as such. The gap claim now names what was searched and when, per this
+file's own rule. A thesis it cited as "Henriksson & Liman, *Evaluating VPN Defenses Against Video
+Fingerprinting*" **could not be found** in OpenAlex, arXiv, web search or the Chalmers repository;
+the examiner and supervisor names it gave belong to `bjorklund2024thesis`, which is real and has
+now been added. `ridderland2026mole` was verified correct from its own title page. Also verified:
+Siby's SWITCHDrive link genuinely 404s with a browser user-agent while the site root returns 200,
+so it is not a bot block.
+
+**2026-11-24** — **The November gate is reachable.** `smith2021quicage`'s processed dataset is
+**871 MB**, not the ~30 GB raw set, and both polybox links in its README are dead. The live copy is
+the ETH Research Collection record, verified by range-fetching bytes and confirming gzip magic. The
+exact command is in the November entry above.
 
 **2026-11-24** — Collapsed `PLAN.md`, `notes/PROJECT.md`, `DECISIONS.md` and `CONTEXT.md` into this
 one file. Four documents describing one project is how the drift started; nothing was lost in the
