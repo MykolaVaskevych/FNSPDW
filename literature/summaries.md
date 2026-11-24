@@ -10,8 +10,9 @@ one that matters — it is what turns reading into the November experiment.
 **Claims** — what the paper says it achieved, in its own terms.
 **Measured on** — dataset, how many sites, how many traces, protocol, open or closed world.
 **Cost reported** — bandwidth and latency overhead, or *none reported* if they did not measure it.
-**To reproduce** — is the code public, is the data public, and what is missing. `artifacts.md`
-already answers most of this; the judgement about what it would take is the part worth writing.
+**To reproduce** — is the code public, is the data public, and what is missing. `../PLAN.md`
+already answers most of this under *Code and data*; the judgement about what it would take is the
+part worth writing.
 
 Stop writing when the four fields are full. This is not an essay.
 

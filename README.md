@@ -7,13 +7,14 @@ MSc Future Networked Systems, Trinity College Dublin. Supervisor: Stephen Farrel
 
 ## Read
 
-- **[Plan](PLAN.md)** — the topic, the scope, the gap this fills, and month by month to
-  submission in August 2027. **The source of truth for topic and scope**
-- **[Decisions](DECISIONS.md)** — every time the scope changed, when, why, and what it superseded
-- **[Context](CONTEXT.md)** — the whole project in one self-contained page, for briefing an
-  assistant that cannot read this repo
-- **[Literature](literature/README.md)** — the library, and why each paper is in it
-  · **[reading order](literature/summaries.md)** · **[code and data](literature/artifacts.md)**
+**[PLAN.md](PLAN.md)** is the whole project in one file — the question, the scope, the gap it
+fills, month by month to submission in August 2027, the gates and what happens when each one
+fails, how I work, the library, and a dated log of every decision that changed any of it.
+
+There is deliberately nothing else to read. Four documents describing one project is how the
+plan and the brief drifted apart far enough to contradict each other, so they were merged.
+
+- **[literature/summaries.md](literature/summaries.md)** — reading order, and my notes per paper
 - **Paper** — [PDF](https://github.com/MykolaVaskevych/Paper/blob/main/build/default/default.pdf)
   · [LaTeX source](https://github.com/MykolaVaskevych/Paper)
   · [live on Overleaf](https://www.overleaf.com/read/gpwqvbpkffkp#9d77de)
@@ -24,28 +25,23 @@ directly. The PDF is committed, so it can be read without a LaTeX setup.
 
 ## References
 
-Zotero owns the bibliography. The `disertation` collection is the single source of truth, and
-Better BibTeX auto-exports it to **`paper/src/bibs/ref.bib`**, which is the file `main.tex` reads
-through `\bibliography{bibs/ref}`. Add a paper in Zotero and the export follows within seconds.
-
-`ref.bib` is therefore machine-written and must never be hand-edited — anything typed into it is
-lost on the next export. The collection is sorted into four subcollections by what each paper is
-for: foundations, read-and-reproduce, needed for the experiments, and current work to argue with.
-To check the export is in step, compare `grep -c '^@' paper/src/bibs/ref.bib` against the item
-count Zotero shows for the collection.
-
-Every entry was verified against OpenAlex, the arXiv API, or the publisher's own proceedings
-listing before it went in. [literature/artifacts.md](literature/artifacts.md) records which of
-those papers ship runnable code or a usable dataset, with every link checked.
+Zotero owns the bibliography. The `disertation` collection is the source of truth, and Better
+BibTeX auto-exports it to `paper/src/bibs/ref.bib`, which is what `main.tex` reads through
+`\bibliography{bibs/ref}`. That file is machine-written — never hand-edit it. Every entry was
+verified against OpenAlex, the arXiv API, or the publisher's own proceedings listing before it
+went in. Details, including which papers ship runnable code or a usable dataset, are in
+[PLAN.md](PLAN.md#the-library).
 
 ## Experiments
 
-One folder each. Every README says what it asked, what the threshold was, and what came back.
+One folder each. Every README says what it asked, what the threshold was, and what came back —
+written before the experiment ran.
 
 - **[first-look](experiments/first-look)** — TLS record sizes read off real packets. Encryption
   hides what is in a record, not how big it is.
 - **[token-batching](experiments/token-batching)** — does one streamed event carry one token?
-  Yes, but OpenAI pads every event to a constant size, which closes the channel.
+  Yes, but OpenAI pads every event to a constant size, which closes the channel. This is the
+  measurement that became the project's motivation.
 - **[pilot](experiments/pilot)** — inherited feasibility probe. Superseded, and its numbers are
   not citable. Kept for the method and for the record of why they don't count.
 
