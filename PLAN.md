@@ -60,13 +60,19 @@ Mullvad.** Three pieces of work exist and none of them closes that:
   78% of DAITA streams remain unidentified", which "refutes what was previously thought, that DAITA
   provided full protection". Also video. Its advisor is Odd Stranne of Mullvad VPN, so not
   independent either, and its supervisor is `bjorklund2025video`'s co-author.
+- **`henriksson2026daita`** — a second 2026 Chalmers MSc thesis, reusing the same attack, which
+  concludes that "DAITA does not always break the attack". Advisors are Odd Stranne of Mullvad
+  **and Tobias Pulls of Karlstad**, and it thanks Mullvad for supplying the test setup — so the
+  least independent of the four. Video again.
 
 On top of that, Mullvad's own commissioned GotaTun audit, by Assured Security Consultants,
 **explicitly excluded the DAITA code**; a newer DAITA version has since shipped; and consumer
 review sites quote overhead percentages with no stated source.
 
-So the literature on a deployed defence consists of one vendor-adjacent blog post about websites,
-one five-video preliminary test, and one thesis that disagrees with it. That is the gap, and it is
+So the literature on a deployed defence is one vendor-adjacent blog post about websites, one
+five-video preliminary test, and three student theses — and **three of those four video works have
+a Mullvad advisor or author**. Only `bjorklund2025video` has no stated Mullvad involvement, and it
+is the briefest of them. Nothing in any of it is about website fingerprinting. That is the gap, and it is
 narrower and more defensible than "nobody has evaluated DAITA" — which was the wording here until
 2026-11-24 and is false.
 
@@ -75,10 +81,13 @@ narrower and more defensible than "nobody has evaluated DAITA" — which was the
 and INFOCOM proceedings listings; web search for independent DAITA evaluation, overhead and
 measurement; Mullvad's own blog and help pages (both `/blog/daita-v2` and `/help/daita` 404'd, so
 the current version's claims are still unverified from a primary source); and the Chalmers thesis
-repository. A claimed thesis by "Henriksson & Liman" on DAITA and video fingerprinting could not be
-found in any of those and should not be cited unless someone produces it. Re-check before this goes
-in front of an examiner — it is a negative claim about a live product and it has already been
-wrong twice.
+repository. Re-check before this goes in front of an examiner — it is a negative claim about a live
+product and it has been wrong three times already.
+
+**Student theses are not in OpenAlex or arXiv.** Searching those for a Chalmers MSc thesis cannot
+find one, so finding nothing there says nothing. Institutional repositories have to be queried
+directly, and their own search missed `henriksson2026daita` even though the record exists. The only
+search that settles a thesis question is the repository API by handle or by author.
 
 Five axes make a new measurement a contribution rather than a repeat, each one something no
 existing work covers together: **website** fingerprinting rather than video, many websites rather
@@ -122,7 +131,7 @@ Taught modules are heavier this semester and lighten from January, so the rest o
 part-time research and the real work starts in the new year.
 
 Exam dates are now published, and they are not what this plan originally assumed. From Trinity's
-2026-27 academic year calendar: **Semester 1 assessment 10-22 December 2026**; Hilary teaching ends
+2026-27 academic year calendar: **Semester 1 assessment 11-22 December 2026**; Hilary teaching ends
 **9 April 2027**; **Semester 2 assessment 19-30 April 2027**; marking and results to 21 May, with
 research time opening up from late May.
 
@@ -160,6 +169,11 @@ There is also a 7.25 GB VM image in the same record with code and data preloaded
 out to be the slow part. Compute is modest: the authors ran each experiment on 2-4 cores with 6 GB
 per core.
 
+The target is one number from one notebook: Section 6, `workflows/generalisability-analysis`,
+`confusion-matrix.ipynb` — "Of the 5,000 tested QUIC samples, 4,801 (96%) of them are incorrectly
+classified as unmonitored traces". Threshold and the one thing to confirm first are in
+`experiments/reproduce-smith/README.md`, written before the download.
+
 `siby2023quic` is the closer work and **does** ship an artifact — `spring-epfl/quic-wf-defenses`,
 with capture scripts, feature extraction, a random-forest attack for both adversary models, both
 defence setups and a Dockerfile. The reason not to use it as the November baseline is narrower:
@@ -167,7 +181,7 @@ defence setups and a Dockerfile. The reason not to use it as the November baseli
 so reproducing it means collecting the captures first, which is weeks rather than days. Worth
 revisiting in February, when captures are the job anyway. `zhan2021earlyquic` ships nothing.
 
-**December** — exams run 10-22 December, so this is a reduced month with the real work in its first
+**December** — exams run 11-22 December, so this is a reduced month with the real work in its first
 week. By 9 December: re-evaluate the November result with deduplicated, time-split data. A lot of
 published accuracy here is inflated by leaky splits, so this doubles as a methods chapter and a
 check that the pipeline is sound, and `deng2025realistic` supplies the axes. After exams, if
@@ -211,7 +225,7 @@ table only names the decision.
 | when | gate | if it fails |
 |---|---|---|
 | end Nov | a published baseline reproduces — their code, their data, their number | the methods finding becomes the first contribution and the schedule shifts right |
-| **9 Dec** | that result survives honest re-evaluation on deduplicated, time-split data | slips to early January, and that is acceptable — Semester 1 assessment runs 10-22 December |
+| **9 Dec** | that result survives honest re-evaluation on deduplicated, time-split data | slips to early January, and that is acceptable — Semester 1 assessment runs 11-22 December |
 | end Feb | my own captures reproduce published-level accuracy | simplify the capture path rather than perfecting it; fall back to public datasets |
 | end Mar | DAITA produces a measurable accuracy drop | report the null honestly; the cost measurement stands on its own |
 | end May | a defensible cost curve exists, whatever its shape | the deployment-failure analysis carries the evaluation chapter instead |
@@ -220,8 +234,8 @@ Reproducing somebody's number and re-evaluating it honestly are separate jobs wi
 modes. Bundling them hid the fact that the second is the one with intellectual content.
 
 The second gate sits on **9 December**, the day before Semester 1 assessment opens, not mid-month:
-it had been put inside the exam period, the same error that had the cost curve inside the April
-exams. The re-evaluation reuses the November dataset and codebase and only changes the splits, so
+it had been put inside the exam period (11-22 December), the same error that had the cost curve
+inside the April exams. The re-evaluation reuses the November dataset and codebase and only changes the splits, so
 two weeks is plausible — but the slip to January is pre-registered rather than improvised.
 
 ## If a gate fails
@@ -269,6 +283,10 @@ satisfies the generality requirement while staying the most original idea availa
 - Re-check the literature every two months. Next: January 2027.
 - Any claim that nobody has done something gets written with its evidence and the date it was
   checked, in the same sentence. Negative claims rot, and they drift when restated.
+- A negative claim also has to say **whether the search could have found the thing**. OpenAlex and
+  arXiv do not index student theses; conference proceedings listings do not index blog posts or
+  vendor pages. "I searched and found nothing" is only evidence if the search covered the right
+  index. This rule cost three wrong claims to learn.
 
 ## How I work
 
@@ -352,7 +370,7 @@ sorting is manual.
 `khajavi2026lightening` `cebere2026http2` `deng2025realistic` `yu2026proxydrift`
 `jansen2024genuine` `jansen2026cellshift` `sabzi2024netshaper` `pulls2023maybenot`
 `pulls2024daitaeval` `bjorklund2025video` `bjorklund2024thesis` `ridderland2026mole`
-`gahtan2024visquic` `witwer2026dodge` `hasselquist2024raising`
+`henriksson2026daita` `gahtan2024visquic` `witwer2026dodge` `hasselquist2024raising`
 
 **4 state of the art** — `pulls2026ephemeral` `song2026llmwf` `wang2026cease` `zhao2026llmwf`
 `cheng2026star`
@@ -371,12 +389,14 @@ sorting is manual.
   padding, from the same 95.8 baseline.
 - **`pulls2024daitaeval`** — grey literature, required reading, ten minutes. The only DAITA
   measurement against *website* fingerprinting, and the thing March has to improve on.
-- **`bjorklund2025video`**, **`bjorklund2024thesis`** and **`ridderland2026mole`** — the only other
-  DAITA evaluations, all three about video, and they disagree. Björklund found no video identified
+- **`bjorklund2025video`**, **`bjorklund2024thesis`**, **`ridderland2026mole`** and
+  **`henriksson2026daita`** — the only other DAITA evaluations, all four about video, and they
+  disagree with each other. Björklund found no video identified
   with DAITA on; Ridderland and Tagra found 78 % unidentified, i.e. roughly one in five still
-  identified, and say so explicitly refutes the earlier "full protection" reading. Read all three
+  identified, and say that explicitly refutes the earlier "full protection" reading.
+  `henriksson2026daita` lands in between: "DAITA does not always break the attack". Read all four
   before the March measurement — they are the nearest thing to prior art, and the disagreement
-  between them is itself worth a paragraph.
+  between them is itself worth a paragraph. Note three of the four have a Mullvad advisor.
 - **`gong2020front`** and **`cai2014tamaraw`** — FRONT and Tamaraw, the two defences everyone
   measures against. Prerequisites, not background: reading the 2026 papers without these is reading
   arguments without the claims. Cai also derives a lower bound on the bandwidth cost of *any*
@@ -434,6 +454,7 @@ client-side QUIC defence. `robshahla/VisQUIC` — QUIC pcaps with TLS keys.
 | `bjorklund2025video` | yes | yes, incl. DAITA pcaps | `trustcom/endangered-privacy` + `doi.org/10.5281/zenodo.15051891` |
 | `bjorklund2024thesis` | — | — | thesis only, `odr.chalmers.se` |
 | `ridderland2026mole` | — | — | thesis only, `odr.chalmers.se` |
+| `henriksson2026daita` | — | — | thesis only, `odr.chalmers.se` |
 | `smith2022qcsd` | yes | — | `jpcsmith/neqo-qcsd` |
 | `gong2020front` | yes | yes | `websitefingerprinting/WebsiteFingerprinting` |
 | `cai2014tamaraw` | yes | yes | `crysp.uwaterloo.ca/software/` |
@@ -589,7 +610,7 @@ the text.
 
 **2026-11-24** — **Exam dates published; April is a reduced month, not May.** Semester 2 assessment
 is 19-30 April 2027 and Hilary teaching ends 9 April. The cost-curve work and the end-of-month gate
-had been put in April, inside the exam period; both moved to May. Semester 1 assessment is 10-22
+had been put in April, inside the exam period; both moved to May. Semester 1 assessment is 11-22
 December 2026, which December already allowed for.
 
 
@@ -601,14 +622,14 @@ which contradicts the pilot's own README saying its numbers are not citable.
 
 
 **2026-11-24** — Second review of the corrected gap claim, by another assistant. Four findings
-held. The **mid-December gate was inside Semester 1 assessment** (10-22 December) — the same error
+held. The **mid-December gate was inside Semester 1 assessment** (11-22 December) — the same error
 just fixed for April — and moved to 9 December with a pre-registered slip to January. The claim
 that `bjorklund2025video` "asks for your work by name" was an **overstatement**: its closing line
 is generic and is now quoted as such. The gap claim now names what was searched and when, per this
-file's own rule. A thesis it cited as "Henriksson & Liman, *Evaluating VPN Defenses Against Video
-Fingerprinting*" **could not be found** in OpenAlex, arXiv, web search or the Chalmers repository;
-the examiner and supervisor names it gave belong to `bjorklund2024thesis`, which is real and has
-now been added. `ridderland2026mole` was verified correct from its own title page. Also verified:
+file's own rule. It also cited a thesis by "Henriksson & Liman"; I
+searched for it and wrongly concluded it did not exist — see the next entry. `ridderland2026mole`
+was verified correct from its own title page, and `bjorklund2024thesis` was found and added along
+the way. Also verified:
 Siby's SWITCHDrive link genuinely 404s with a browser user-agent while the site root returns 200,
 so it is not a bot block.
 
@@ -616,6 +637,22 @@ so it is not a bot block.
 **871 MB**, not the ~30 GB raw set, and both polybox links in its README are dead. The live copy is
 the ETH Research Collection record, verified by range-fetching bytes and confirming gzip magic. The
 exact command is in the November entry above.
+
+**2026-11-24** — **Retraction: `henriksson2026daita` is real, and this log recorded it as
+unfindable.** "Evaluating VPN Defenses Against Video Fingerprinting: A Case Study of DAITA",
+Henriksson and Liman, Chalmers 2026, record `odr.chalmers.se/items/f2cd7d86-9d38-47a7-8dbc-7ac751202d42`,
+verified from the repository API and its own title page, now in Zotero. Advisors Odd Stranne of
+Mullvad and Tobias Pulls of Karlstad; it finds "DAITA does not always break the attack".
+
+Why the search failed, because the method matters more than the instance: I queried OpenAlex and
+the arXiv API, **neither of which indexes student theses**, plus a web search whose Chalmers
+results happened to surface a different thesis. None of that could have found this record, yet I
+wrote "could not be found ... and should not be cited unless someone produces it". That is the
+third wrong negative claim in two days — after "nobody has independently evaluated DAITA" and "the
+protection has never been publicly quantified" — and all three have the same shape: asserting
+absence from a search that was not capable of establishing it. The standing commitments now require
+a negative claim to say whether the search could have found the thing. Recording a real document as
+fabricated is the exact failure this log exists to prevent.
 
 **2026-11-24** — Collapsed `PLAN.md`, `notes/PROJECT.md`, `DECISIONS.md` and `CONTEXT.md` into this
 one file. Four documents describing one project is how the drift started; nothing was lost in the
